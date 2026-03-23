@@ -11,6 +11,7 @@
 - pnpm
 
 ## Project Structure
+```
 src/
 ├── assets/
 ├── components/
@@ -20,10 +21,11 @@ src/
 ├── styles/
 ├── App.jsx
 └── main.jsx
+```
 
 ## Setup
-# 패키지 설치
+### 패키지 설치
 pnpm install
 
-# 개발 서버 실행
+#### 개발 서버 실행
 pnpm dev
