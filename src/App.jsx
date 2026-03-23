@@ -1,7 +1,11 @@
+import { RouterProvider } from 'react-router-dom'
+import AppRouter from './components/AppRouter'
+import styles from './App.module.css'
+
 function App() {
   return (
-    <div>
-      <h1>CarTalk</h1>
+    <div className={styles.app}>
+      <RouterProvider router={AppRouter} />
     </div>
   )
 }
