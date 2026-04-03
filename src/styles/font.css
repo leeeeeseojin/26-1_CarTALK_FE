@@ -1,0 +1,54 @@
+/* =====================
+   font.css
+   ===================== */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+:root {
+  /* ── Display ── */
+  --display-size: 32px;
+  --display-weight: 800;
+  --display-leading: 41px;
+  --display-tracking: -1.28px;
+
+  /* ── Page Title ── */
+  --title-size: 22px;
+  --title-weight: 800;
+  --title-leading: 28px;
+  --title-tracking: -0.66px;
+
+  /* ── Section Title ── */
+  --section-size: 18px;
+  --section-weight: 800;
+  --section-leading: 24px;
+  --section-tracking: -0.36px;
+
+  /* ── Body Default ── */
+  --body-size: 14px;
+  --body-weight: 500;
+  --body-leading: 22px;
+  --body-tracking: 0px;
+
+  /* ── Body Small ── */
+  --body-sm-size: 13px;
+  --body-sm-weight: 500;
+  --body-sm-leading: 20px;
+  --body-sm-tracking: 0px;
+
+  /* ── Label ── */
+  --label-size: 11px;
+  --label-weight: 700;
+  --label-leading: 16px;
+  --label-tracking: 0.55px;
+
+  /* ── Tiny ── */
+  --tiny-size: 10px;
+  --tiny-weight: 700;
+  --tiny-leading: 14px;
+  --tiny-tracking: 0.4px;
+}
+
+/* 전역 폰트 설정 */
+* {
+  font-family: 'Pretendard', sans-serif;
+}
