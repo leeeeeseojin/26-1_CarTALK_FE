@@ -1,0 +1,122 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-card);
+}
+
+.login__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-24);
+}
+
+/* 로고 */
+.login__brand {
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  line-height: var(--title-leading);
+  color: var(--txt-high);
+  text-align: center;
+}
+
+/* 카드 */
+.login__card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-24);
+  width: 520px;
+  padding: 52px 56px;
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-default);
+}
+
+/* 입력 필드 묶음 */
+.login__fields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--sp-12);
+  width: 100%;
+}
+
+/* 인풋 내부 묶음 */
+.login__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12);
+  width: 100%;
+}
+
+/* 페이지 내에서 InputField 너비 조정 */
+.login__inputs .input-field {
+  align-self: stretch;
+}
+
+.login__inputs .input-field__input {
+  width: 100%;
+}
+
+/* 로그인 버튼 */
+.login__btn--primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 46px;
+  background-color: var(--p-main);
+  border: none;
+  border-radius: var(--r-default);
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+  color: var(--txt-on-y);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.login__btn--primary:hover {
+  background-color: var(--p-dark);
+}
+
+/* 회원가입 버튼 */
+.login__btn--ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 46px;
+  background-color: transparent;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--r-default);
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+  color: var(--txt-mid);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.login__btn--ghost:hover {
+  border-color: var(--border-focus);
+  color: var(--txt-high);
+}
+
+/* 비밀번호 찾기 */
+.login__forgot {
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+  color: var(--txt-low);
+  text-align: right;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login__forgot:hover {
+  color: var(--txt-mid);
+}
