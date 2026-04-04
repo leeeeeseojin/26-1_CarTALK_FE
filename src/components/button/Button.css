@@ -1,0 +1,46 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+/* ── Variant ── */
+.btn--primary {
+  background-color: var(--p-main);
+  border-radius: var(--r-default);
+  color: var(--txt-on-y);
+}
+
+.btn--primary:hover {
+  background-color: var(--p-dark);
+}
+
+.btn--ghost {
+  background-color: transparent;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--r-default);
+  color: var(--txt-mid);
+}
+
+.btn--ghost:hover {
+  border-color: var(--border-focus);
+  color: var(--txt-high);
+}
+
+/* ── Size ── */
+.btn--md {
+  height: 46px;
+}
+
+.btn--sm {
+  height: 42px;
+}

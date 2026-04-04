@@ -1,4 +1,5 @@
 import InputField from '../../../components/inputField/InputField'
+import Button from '../../../components/button/Button'
 import './SignupPage.css'
 
 export default function SignupPage() {
@@ -23,9 +24,9 @@ export default function SignupPage() {
               autoComplete='email'
               required
             />
-            <button className='signup__btn--ghost' type='button'>
+            <Button variant='primary' size='sm' width='90px'>
               이메일 인증
-            </button>
+            </Button>
           </div>
 
           {/* 인증코드 */}
@@ -38,11 +39,11 @@ export default function SignupPage() {
                 placeholder='인증코드 6자리'
                 required
               />
-              <button className='signup__btn--ghost' type='button'>
+              <Button variant='primary' size='sm' width='90px'>
                 확인
-              </button>
+              </Button>
             </div>
-            <p className='signup__hint'> 이메일로 발송된 6자리 인증코드를 입력해 주세요</p>
+            <p className='signup__hint'>이메일로 발송된 6자리 인증코드를 입력해 주세요</p>
           </div>
 
           {/* 비밀번호 */}
@@ -55,7 +56,7 @@ export default function SignupPage() {
               autoComplete='new-password'
               required
             />
-            <p className='signup__hint'> 영문, 숫자 포함 8자 이상</p>
+            <p className='signup__hint'>영문, 숫자 포함 8자 이상</p>
           </div>
 
           {/* 비밀번호 재입력 */}
@@ -69,9 +70,9 @@ export default function SignupPage() {
           />
 
           {/* 가입 완료 버튼 */}
-          <button className='signup__btn--primary' type='submit'>
+          <Button variant='primary' size='md' type='submit'>
             가입 완료
-          </button>
+          </Button>
         </section>
       </div>
     </main>
