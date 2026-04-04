@@ -1,0 +1,26 @@
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+.step-indicator__step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+}
+
+.step-indicator__step--active {
+  background-color: var(--p-main);
+  color: var(--txt-on-y);
+}
+
+.step-indicator__step--idle {
+  background-color: var(--n-800);
+  color: #6b5b5b;
+}
