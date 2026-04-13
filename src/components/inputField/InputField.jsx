@@ -7,6 +7,8 @@ export default function InputField({
   placeholder,
   autoComplete,
   required,
+  value,
+  onChange
 }) {
   return (
     <div className='input-field'>
@@ -18,6 +20,8 @@ export default function InputField({
         placeholder={placeholder}
         autoComplete={autoComplete}
         required={required}
+        value={value}
+        onChange={onChange}
       />
     </div>
   )
