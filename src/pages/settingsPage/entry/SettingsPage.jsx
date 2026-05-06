@@ -12,6 +12,9 @@ export default function SettingsPage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [isPersonalModalOpen, setIsPersonalModalOpen] = useState(false)
 
+  // [JS] 차량 편집 모드 상태
+  const [isVehicleEditing, setIsVehicleEditing] = useState(false)
+
   const navigate = useNavigate()
 
   // [JS] 차량 목록 — 추후 API 연동
@@ -31,6 +34,11 @@ export default function SettingsPage() {
       isVerified: true,
     },
   ]
+
+  // [JS] 차량 저장 — 변경사항 저장 API 연동 예정
+  const handleVehicleSave = () => {
+    setIsVehicleEditing(false)
+  }
 
   return (
     <div className='settings'>
@@ -55,10 +63,17 @@ export default function SettingsPage() {
         {/* 내 차량 헤더 */}
         <div className='settings__vehicle-header'>
           <h2 className='settings__vehicle-title'>내 차량</h2>
-          {/* [JS] 차량 편집 페이지 이동 연결 */}
-          <a className='settings__vehicle-edit' onClick={() => navigate('/vehicle-edit')}>
-            차량 편집
-          </a>
+          {isVehicleEditing ? (
+            // [JS] 차량 저장 클릭 — 편집 모드 해제 + 저장 API 연결
+            <button className='settings__vehicle-save' onClick={handleVehicleSave}>
+              차량 저장
+            </button>
+          ) : (
+            // [JS] 차량 편집 클릭 — 편집 모드 활성화
+            <button className='settings__vehicle-edit' onClick={() => setIsVehicleEditing(true)}>
+              차량 편집
+            </button>
+          )}
         </div>
 
         {/* 차량 카드 목록 */}
@@ -70,10 +85,14 @@ export default function SettingsPage() {
               type={v.type}
               note={v.note}
               isVerified={v.isVerified}
+              isEditing={isVehicleEditing}
+              onClick={() => navigate('/vehicle-edit')} // [JS] vehicleEditPage로 이동
             />
           ))}
-          {/* [JS] 차량 추가 onClick 연결 */}
-          <VehicleAddCard onClick={() => navigate('/vehicle-edit')} />
+          {/* 편집 모드에서만 차량 추가 카드 표시 */}
+          {isVehicleEditing && (
+            <VehicleAddCard onClick={() => navigate('/vehicle-edit')} /> // [JS] vehicleEditPage로 이동
+          )}
         </div>
       </main>
 

@@ -19,7 +19,7 @@
   overflow: hidden;
 }
 
-/* 페이지 제목  */
+/* 페이지 제목 — ExtraBold 28px */
 .settings__title {
   font-size: var(--title-size);
   font-weight: var(--title-weight);
@@ -44,7 +44,7 @@
   width: 100%;
 }
 
-/* 내 차량 제목  */
+/* 내 차량 제목 — ExtraBold 24px */
 .settings__vehicle-title {
   font-size: var(--section-size);
   font-weight: var(--section-weight);
@@ -67,10 +67,24 @@
   color: var(--txt-mid);
 }
 
-/* 차량 카드 목록  */
+/* 차량 카드 목록 — 가로 스크롤 가능, gap 24px */
 .settings__vehicle-list {
   display: flex;
   gap: 24px;
   align-items: flex-start;
   flex-wrap: wrap;
+}
+
+/* 차량 저장 버튼 — 차량 편집과 동일 스타일 */
+.settings__vehicle-save {
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+  line-height: var(--body-sm-leading);
+  color: var(--p-dark);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.settings__vehicle-save:hover {
+  color: var(--txt-mid);
 }
