@@ -30,6 +30,14 @@
   flex-shrink: 0;
 }
 
+/* 이미지 — 사진 있을 때 */
+.vehicle-modal__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* 인증 뱃지 — 우상단 */
 .vehicle-modal__badge {
   position: absolute;
@@ -96,6 +104,7 @@
   color: var(--txt-low);
   white-space: nowrap;
   flex-shrink: 0;
+  width: 52px;
 }
 
 .vehicle-modal__info-value {

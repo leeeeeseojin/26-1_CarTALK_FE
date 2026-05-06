@@ -1,11 +1,15 @@
 import Badge from '../../../../components/badge/Badge'
 import './VehicleCard.css'
 
-export function VehicleCard({ plateNumber, type, note, isVerified }) {
+export function VehicleCard({ plateNumber, type, note, isVerified, imageUrl, isEditing, onClick }) {
   return (
-    <div className='vehicle-card'>
-      {/* 이미지 영역 */}
+    <div
+      className={`vehicle-card${isEditing ? ' vehicle-card--editing' : ''}`}
+      onClick={isEditing ? onClick : undefined}
+    >
+      {/* 이미지 영역 — 사진 없으면 배경색(default), 있으면 이미지 표시 */}
       <div className='vehicle-card__image'>
+        {imageUrl && <img className='vehicle-card__img' src={imageUrl} alt='차량 사진' />}
         {isVerified && (
           <div className='vehicle-card__badge'>
             <Badge variant='verified' />
@@ -13,7 +17,6 @@ export function VehicleCard({ plateNumber, type, note, isVerified }) {
         )}
       </div>
 
-      {/* 본문 */}
       <div className='vehicle-card__body'>
         <p className='vehicle-card__plate'>{plateNumber}</p>
         <div className='vehicle-card__divider' />
@@ -36,7 +39,6 @@ export function VehicleCard({ plateNumber, type, note, isVerified }) {
 
 export function VehicleAddCard({ onClick }) {
   return (
-    // [JS] onClick 연결
     <div className='vehicle-add-card' onClick={onClick}>
       <div className='vehicle-add-card__inner'>
         <span className='vehicle-add-card__plus'>+</span>

@@ -6,15 +6,19 @@ export default function ProfileCard({
   nickname,
   status,
   isVerified,
+  avatarUrl,
   onEditProfile,
   onEditPersonal,
 }) {
   return (
     <div className='profile-card'>
-      {/* 아바타 */}
-      <div className='profile-card__avatar' />
+      {/* 아바타 — 사진 없으면 배경색(default), 있으면 이미지 표시 */}
+      {avatarUrl ? (
+        <img className='profile-card__avatar' src={avatarUrl} alt='프로필' />
+      ) : (
+        <div className='profile-card__avatar' />
+      )}
 
-      {/* 정보 + 뱃지 */}
       <div className='profile-card__info-wrap'>
         <div className='profile-card__info'>
           <p className='profile-card__nickname'>{nickname}</p>
@@ -23,7 +27,6 @@ export default function ProfileCard({
         {isVerified && <Badge variant='verified' />}
       </div>
 
-      {/* 버튼 묶음 */}
       <div className='profile-card__actions'>
         {/* [JS] onEditProfile 연결 */}
         <Button variant='outline' onClick={onEditProfile}>

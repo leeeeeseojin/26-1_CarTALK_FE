@@ -1,10 +1,11 @@
 import './SearchNoneModal.css'
 
+import chatWarnIcon from '../../../../assets/chat/chat-warn.svg'
+
 export default function SearchNoneModal() {
   return (
     <div className='search-none-toast'>
-      {/* 아이콘 — assets에 추가 필요 */}
-      <img className='search-none-toast__icon' src='/src/assets/icons/warn.svg' alt='경고' />
+      <img className='search-none-toast__icon' src={chatWarnIcon} alt='경고' />
       <p className='search-none-toast__text'>해당 차량을 찾을 수 없어요!</p>
     </div>
   )

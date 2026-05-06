@@ -8,13 +8,15 @@ export default function VehicleModal({
   note,
   status,
   isVerified,
+  imageUrl,
   onClose,
 }) {
   return (
     <div className='vehicle-modal__overlay'>
       <div className='vehicle-modal'>
-        {/* 이미지 영역 */}
+        {/* 이미지 영역 — 사진 없으면 배경색(default), 있으면 이미지 표시 */}
         <div className='vehicle-modal__image'>
+          {imageUrl && <img className='vehicle-modal__img' src={imageUrl} alt='차량 사진' />}
           {isVerified && (
             <div className='vehicle-modal__badge'>
               <Badge variant='verified' />
@@ -22,18 +24,14 @@ export default function VehicleModal({
           )}
         </div>
 
-        {/* 본문 */}
         <div className='vehicle-modal__body'>
-          {/* 번호판 + 닉네임 */}
           <div className='vehicle-modal__id'>
             <p className='vehicle-modal__plate'>{plateNumber}</p>
             <p className='vehicle-modal__nickname'>{nickname}</p>
           </div>
 
-          {/* 구분선 */}
           <div className='vehicle-modal__divider' />
 
-          {/* 차량 정보 */}
           <div className='vehicle-modal__info'>
             <div className='vehicle-modal__info-row'>
               <span className='vehicle-modal__info-label'>차종</span>
@@ -47,11 +45,9 @@ export default function VehicleModal({
             )}
           </div>
 
-          {/* 상태메시지 */}
           {status && <p className='vehicle-modal__status'>{status}</p>}
         </div>
 
-        {/* 닫기 버튼 */}
         <div className='vehicle-modal__footer'>
           {/* [JS] onClose 연결 */}
           <button className='vehicle-modal__close-btn' onClick={onClose}>
