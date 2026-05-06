@@ -27,11 +27,11 @@
   width: 100%;
 }
 
-/* 로고 — Display 40px ExtraBold */
+/* 로고 — Display 40px ExtraBold, tracking -1.6px */
 .search__logo {
   font-size: var(--display-size);
   font-weight: var(--display-weight);
-  letter-spacing: var(--display-tracking);
+  letter-spacing: -1.6px;
   line-height: var(--display-leading);
   color: var(--txt-heading);
   text-align: center;

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import './Sidebar.css'
 
 import chatActive from '../../assets/sidebar/chat-active.svg'
@@ -10,6 +10,10 @@ import searchDefault from '../../assets/sidebar/search-default.svg'
 import logout from '../../assets/sidebar/logout.svg'
 
 const Sidebar = () => {
+  const location = useLocation()
+
+  const isProfileActive = location.pathname === '/settings' || location.pathname === '/vehicle-edit'
+
   // [JS] 로그아웃 API 연동 예정
   const handleLogout = () => {
     alert('로그아웃 되었습니다. (추후 API 연동)')
@@ -20,7 +24,7 @@ const Sidebar = () => {
       <div className='sidebar__col'>
         <div className='sidebar__top'>
           <NavLink to='/settings'>
-            {({ isActive }) => <img src={isActive ? profileActive : profileDefault} alt='프로필' />}
+            {() => <img src={isProfileActive ? profileActive : profileDefault} alt='프로필' />}
           </NavLink>
 
           <NavLink to='/chat'>
