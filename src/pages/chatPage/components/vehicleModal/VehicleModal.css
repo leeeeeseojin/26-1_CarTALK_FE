@@ -8,12 +8,12 @@
   z-index: 100;
 }
 
-/* 모달 본체  */
+/* 모달 본체 — 400px, radius card, shadow */
 .vehicle-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 330px;
+  width: 400px;
   background-color: var(--bg-card);
   border: 0.5px solid var(--border-default);
   border-radius: var(--r-card);
@@ -21,7 +21,7 @@
   box-shadow: 0px 0px 40px 0px rgba(26, 25, 35, 0.2);
 }
 
-/* 이미지 영역 */
+/* 이미지 영역 — 330x330 */
 .vehicle-modal__image {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -85,6 +85,7 @@
 
 .vehicle-modal__info-row {
   display: flex;
+  align-items: center;
   gap: var(--sp-8);
   font-size: var(--body-sm-size);
   font-weight: var(--body-sm-weight);
@@ -93,12 +94,13 @@
 
 .vehicle-modal__info-label {
   color: var(--txt-low);
-  width: 52px;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
 .vehicle-modal__info-value {
   color: var(--txt-heading);
+  word-break: keep-all;
 }
 
 /* 상태메시지 박스 — bg-input, border, r-sm */
