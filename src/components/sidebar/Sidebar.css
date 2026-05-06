@@ -1,76 +1,44 @@
-.sidebar-container {
+.sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px; 
+  width: 88px;
   height: 100vh;
-  background-color: #f5f5f5; 
+  background-color: var(--bg-sidebar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.sidebar__col {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e0e0e0;
-  z-index: 1000;
-  font-family: 'Malgun Gothic', sans-serif;
-}
-
-.profile-section {
-  display: flex;
   align-items: center;
-  padding: 30px 20px;
-  gap: 15px;
-  border-bottom: 1px solid #e0e0e0; 
+  justify-content: space-between;
+  width: 60px;
+  height: 100%;
+  padding: 18px 0;
+  box-sizing: border-box;
 }
 
-.profile-large-icon {
-  font-size: 50px;
-  color: #ccc; 
-}
-
-.profile-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-}
-
-.profile-status {
-  font-size: 12px;
-  color: #888;
-}
-
-.menu-section {
-  flex: 1;
-  padding: 20px 0;
-}
-
-.menu-item {
+.sidebar__top {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 15px 30px;
-  text-decoration: none;
-  color: #555;
-  font-size: 16px;
-  gap: 15px;
+  gap: 18px;
 }
 
-.menu-item.active {
-  color: #000;
-  font-weight: bold;
-  background-color: #e0e0e0; 
+.sidebar__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
-.menu-icon {
-  font-size: 20px;
-}
-
-.logout-menu-btn {
+.sidebar__divider {
   width: 100%;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  font-family: inherit; 
-}
-
-.logout-menu-btn:hover {
-  color: #dc3545;
-  background-color: #fff0f0;
+  height: 1px;
+  background-color: var(--border-default);
 }
