@@ -47,10 +47,12 @@ export default function PasswordChangeModal({ onClose }) {
                   onChange={(e) => setEmail(e.target.value)} // [JS] 입력값 업데이트
                 />
                 {/* [JS] 클릭 시 2단계로 이동 */}
-                <Button variant='small' width='95px' onClick={handleSendEmail}>
+                <Button variant='primary' size='sm' width='86px' onClick={handleSendEmail}>
                   이메일 인증
                 </Button>
               </div>
+              {/* [JS] 나중에 에러 로직 짤 때 조건부로 띄우기 위해 일단 숨겨둠 */}
+              {/* <p className='pwd-modal__error'>인증코드가 일치하지 않습니다</p> */}
             </div>
           </div>
         )}
@@ -59,21 +61,23 @@ export default function PasswordChangeModal({ onClose }) {
         {step === 2 && (
           <div className='pwd-modal__body'>
             <div className='pwd-modal__step-body'>
-              <p className='pwd-modal__desc'>이메일로 발송된 인증코드를 입력해주세요</p>
-              <div className='pwd-modal__row'>
-                <InputField
-                  id='pwd-code'
-                  type='text'
-                  name='code'
-                  placeholder='인증코드 6자리'
-                  value={code} // [JS] 입력값 연결
-                  onChange={(e) => setCode(e.target.value)} // [JS] 입력값 업데이트
-                  // [JS] 현재 디자인에 '확인' 버튼이 따로 없으므로, 인증코드 칸에서 엔터(Enter)키를 치면 3단계로 넘어가게 임시 조치했습니다.
-                  onKeyDown={(e) => e.key === 'Enter' && handleVerifyCode()}
-                />
-                <Button variant='small' width='95px'>
-                  재발송
-                </Button>
+              <div className='pwd-modal__field'>
+                <p className='pwd-modal__desc'>이메일로 발송된 인증코드를 입력해주세요</p>
+                <div className='pwd-modal__row'>
+                  <InputField 
+                    id='pwd-code' 
+                    type='text' 
+                    name='code' 
+                    placeholder='인증코드 6자리' 
+                    value={code} // [JS] 입력값 연결
+                    onChange={(e) => setCode(e.target.value)} // [JS] 입력값 업데이트
+                    // [JS] 현재 디자인에 '확인' 버튼이 따로 없으므로, 인증코드 칸에서 엔터(Enter)키를 치면 3단계로 넘어가게 임시 조치했습니다.
+                    onKeyDown={(e) => e.key === 'Enter' && handleVerifyCode()}
+                  />
+                  <Button variant='primary' size='sm' width='86px'>
+                    재발송
+                  </Button>
+                </div>
               </div>
               {/* [JS] 나중에 에러 로직 짤 때 조건부로 띄우기 위해 일단 숨겨둠 */}
               {/* <p className='pwd-modal__error'>인증코드가 일치하지 않습니다</p> */}
@@ -112,7 +116,7 @@ export default function PasswordChangeModal({ onClose }) {
               </div>
               <div className='pwd-modal__footer'>
                 {/* [JS] 클릭 시 완료(done) 화면으로 이동 */}
-                <Button variant='small' width='120px' onClick={handleChangePassword}>
+                <Button variant='primary' size='sm' width='120px' onClick={handleChangePassword}>
                   변경 완료
                 </Button>
               </div>
@@ -131,7 +135,7 @@ export default function PasswordChangeModal({ onClose }) {
                 <p className='pwd-modal__done-title'>비밀번호가 변경됐어요</p>
                 <p className='pwd-modal__done-desc'>새 비밀번호로 로그인해 주세요</p>
               </div>
-              <Button variant='small' width='320px' onClick={onClose}>
+              <Button variant='primary' size='sm' width='320px' onClick={onClose}>
                 로그인 화면으로
               </Button>
             </div>
