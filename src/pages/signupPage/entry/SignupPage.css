@@ -3,23 +3,28 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-color: var(--bg-card);
 }
 
+/* 로고 + 카드 세로 묶음 */
 .signup__wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--sp-20);
+  width: 100%;
+  max-width: 527px;
+  padding: 40px 20px;
+  box-sizing: border-box;
 }
 
 /* 로고 */
 .signup__brand {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.66px;
-  line-height: 28px;
+  font-size: var(--logo-size);
+  font-weight: var(--logo-weight);
+  letter-spacing: var(--logo-tracking);
+  line-height: var(--logo-leading);
   color: var(--txt-high);
   text-align: center;
 }
@@ -28,31 +33,30 @@
 .signup__card {
   display: flex;
   flex-direction: column;
+  gap: 14px;
   align-items: stretch;
-  gap: var(--sp-12);
-  width: 520px;
+  width: 100%;
   padding: 48px 52px;
   background-color: var(--bg-card);
-  border: 1.5px solid var(--border-default);
+  border: var(--stroke-default) solid var(--border-default);
+  box-sizing: border-box;
 }
 
-/* 제목 */
+/* 제목 — ExtraBold 28px */
 .signup__title {
   font-size: var(--title-size);
   font-weight: var(--title-weight);
   letter-spacing: var(--title-tracking);
   line-height: var(--title-leading);
   color: var(--txt-high);
-  margin-bottom: var(--sp-4);
 }
 
-/* 부제목 */
+/* 부제목 — Medium 15px */
 .signup__subtitle {
   font-size: var(--body-sm-size);
   font-weight: var(--body-sm-weight);
-  color: var(--txt-low);
   line-height: var(--body-sm-leading);
-  margin-bottom: var(--sp-4);
+  color: var(--txt-low);
 }
 
 /* 인풋 + 버튼 가로 묶음 */
@@ -63,24 +67,29 @@
   width: 100%;
 }
 
-/* 인풋 + 힌트 세로 묶음 */
+.signup__row .input-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.signup__row .btn {
+  flex-shrink: 0;
+}
+
+/* 인풋 + 힌트 세로 묶음 — height 61px */
 .signup__field {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4);
+  justify-content: space-between;
+  height: 61px;
   width: 100%;
 }
 
-/* 힌트 텍스트 */
+/* 힌트 텍스트 — Bold 12px */
 .signup__hint {
   font-size: var(--tiny-size);
   font-weight: var(--tiny-weight);
   letter-spacing: var(--tiny-tracking);
   line-height: var(--tiny-leading);
   color: var(--txt-low);
-}
-
-/* 회원가입 페이지에서 버튼 조정 */
-.signup__row .btn {
-  flex-shrink: 0;
 }

@@ -14,7 +14,7 @@ export default function SignupPage() {
           <h2 className='signup__title'>이메일로 가입하기</h2>
           <p className='signup__subtitle'>이메일을 인증하고 비밀번호를 설정해 주세요</p>
 
-          {/* 이메일 인증 */}
+          {/* 이메일 — 인풋 + ghost 버튼(90px) 가로 */}
           <div className='signup__row'>
             <InputField
               id='email'
@@ -24,12 +24,12 @@ export default function SignupPage() {
               autoComplete='email'
               required
             />
-            <Button variant='primary' size='sm' width='90px'>
+            <Button variant='ghost' width='90px'>
               이메일 인증
             </Button>
           </div>
 
-          {/* 인증코드 */}
+          {/* 인증코드 — 인풋 + ghost 버튼(90px) 가로 + 힌트 */}
           <div className='signup__field'>
             <div className='signup__row'>
               <InputField
@@ -39,14 +39,14 @@ export default function SignupPage() {
                 placeholder='인증코드 6자리'
                 required
               />
-              <Button variant='primary' size='sm' width='90px'>
+              <Button variant='ghost' width='90px'>
                 확인
               </Button>
             </div>
             <p className='signup__hint'>이메일로 발송된 6자리 인증코드를 입력해 주세요</p>
           </div>
 
-          {/* 비밀번호 */}
+          {/* 비밀번호 — 인풋 + 힌트 */}
           <div className='signup__field'>
             <InputField
               id='password'
@@ -70,7 +70,7 @@ export default function SignupPage() {
           />
 
           {/* 가입 완료 버튼 */}
-          <Button variant='primary' size='md' type='submit'>
+          <Button variant='primary' type='submit'>
             가입 완료
           </Button>
         </section>

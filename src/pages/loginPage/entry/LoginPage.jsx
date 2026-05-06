@@ -62,9 +62,10 @@ export default function LoginPage() {
 
         {/* 로그인 카드 */}
         <section className='login__card' aria-label='로그인'>
-          <div className='login__fields'>
-            <div className='login__inputs'>
-              {/* 이메일 입력 */}
+          {/* content — body + divider + 비밀번호 찾기 */}
+          <div className='login__content'>
+            {/* body — 인풋 + 버튼들 */}
+            <div className='login__body'>
               <InputField
                 id='email'
                 type='email'
@@ -75,8 +76,6 @@ export default function LoginPage() {
                 value={email} // [JS] 상태 연결
                 onChange={(e) => setEmail(e.target.value)} // [JS] 입력값 업데이트
               />
-
-              {/* 비밀번호 입력 */}
               <InputField
                 id='password'
                 type='password'
