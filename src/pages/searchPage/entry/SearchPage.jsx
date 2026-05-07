@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Sidebar from '../../../components/sidebar/Sidebar'
 import ChatListItem from '../components/chatListItem/ChatListItem'
 import SearchNoneModal from '../components/searchNoneModal/SearchNoneModal'
+import AccidentGuide from '../components/accidentGuide/AccidentGuide'
 import './SearchPage.css'
 
 export default function SearchPage() {
@@ -57,7 +58,6 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* 구분선 */}
         <div className='search__divider' />
 
         {/* 최근 채팅 목록 */}
@@ -74,6 +74,14 @@ export default function SearchPage() {
               />
             ))}
           </div>
+        </div>
+
+        <div className='search__divider' />
+
+        {/* 교통사고 대처요령 */}
+        <div className='search__guide'>
+          <h2 className='search__recent-title'>교통사고 대처요령</h2>
+          <AccidentGuide />
         </div>
       </main>
 

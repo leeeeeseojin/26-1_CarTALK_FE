@@ -128,3 +128,11 @@
   gap: 40px;
   width: 100%;
 }
+
+/* 교통사고 대처요령 섹션 */
+.search__guide {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 100%;
+}
