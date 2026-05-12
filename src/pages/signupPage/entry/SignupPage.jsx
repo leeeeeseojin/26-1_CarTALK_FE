@@ -1,9 +1,5 @@
-import { useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import InputField from '../../../components/inputField/InputField'
-import Button from '../../../components/button/Button'
 import './SignupPage.css'
+import Button from '../../../components/button/Button'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -100,80 +96,61 @@ export default function SignupPage() {
   return (
     <main className='signup'>
       <div className='signup__wrap'>
-        {/* 로고 */}
-        <h1 className='signup__brand'>CarTALK</h1>
-
         {/* 회원가입 카드 */}
         <form className='signup__card' aria-label='회원가입'>
           <h2 className='signup__title'>이메일로 가입하기</h2>
           <p className='signup__subtitle'>이메일을 인증하고 비밀번호를 설정해 주세요</p>
 
-          {/* 이메일 인증 */}
-          <div className='signup__row'>
-            <InputField
-              id='email'
-              type='email'
-              name='email'
-              placeholder='email@example.com'
-              autoComplete='email'
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Button variant='primary' size='sm' type='button' width='90px' onClick={handleSendCode}>
-            
-              이메일 인증
-            </Button>
-          </div>
-
-          {/* 인증코드 */}
-          <div className='signup__field'>
-            <div className='signup__row'>
-              <InputField
-                id='verifyCode'
-                type='text'
-                name='verifyCode'
-                placeholder='인증코드 6자리'
+          {/* 인풋 묶음 */}
+          <div className='signup__inputs'>
+            {/* 이메일 — 인풋 + 인증 전송 링크 */}
+            <div className='signup__field'>
+              <input
+                className='signup__input'
+                type='email'
+                placeholder='email@example.com'
+                autoComplete='email'
                 required
                 value={verifyCode}
                 onChange={(e) => setVerifyCode(e.target.value)}
               />
-              <Button variant='primary' size='sm' type='button' width='90px' onClick={handleVerifyCode}>
-                확인
-              </Button>
+              <span className='signup__action'>인증 전송 →</span>
             </div>
-            <p className='signup__hint'>이메일로 발송된 6자리 인증코드를 입력해 주세요</p>
-          </div>
 
-          {/* 비밀번호 */}
-          <div className='signup__field'>
-            <InputField
-              id='password'
+            {/* 인증코드 — 인풋 + 확인 링크 */}
+            <div className='signup__field'>
+              <input
+                className='signup__input'
+                type='text'
+                placeholder='이메일로 발송된 인증코드 6자리'
+                required
+              />
+              <span className='signup__action'>확인 →</span>
+            </div>
+
+            {/* 비밀번호 */}
+            <input
+              className='signup__input'
               type='password'
-              name='password'
-              placeholder='8자 이상 입력'
+              placeholder='영문, 숫자 포함 8자 이상 비밀번호'
+              autoComplete='new-password'
+              required
+            />
+
+            {/* 비밀번호 재입력 */}
+            <input
+              className='signup__input'
+              type='password'
+              placeholder='비밀번호 재입력'
               autoComplete='new-password'
               required
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
             />
-            <p className='signup__hint'>영문, 숫자 포함 8자 이상</p>
           </div>
 
-          {/* 비밀번호 재입력 */}
-          <InputField
-            id='passwordConfirm'
-            type='password'
-            name='passwordConfirm'
-            placeholder='비밀번호 재입력'
-            autoComplete='new-password'
-            required
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)} 
-          />
-
           {/* 가입 완료 버튼 */}
-          <Button variant='primary' size='md' type='submit'>
+          <Button variant='primary' type='submit'>
             가입 완료
           </Button>
         </form>

@@ -126,6 +126,8 @@ export default function PasswordChangeModal({ onClose }) {
                   {isLoading ? '...' : '이메일 인증'}
                 </Button>
               </div>
+              {/* [JS] 나중에 에러 로직 짤 때 조건부로 띄우기 위해 일단 숨겨둠 */}
+              {/* <p className='pwd-modal__error'>인증코드가 일치하지 않습니다</p> */}
             </div>
           )}
 

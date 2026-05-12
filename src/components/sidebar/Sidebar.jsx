@@ -1,45 +1,51 @@
-// src/components/sidebar/Sidebar.jsx
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import './Sidebar.css';
-import { IoPersonCircleOutline, IoChatbubbleOutline, IoSearchOutline, IoLockClosedOutline } from 'react-icons/io5';
+import { NavLink, useLocation } from 'react-router-dom'
+import './Sidebar.css'
+
+import chatActive from '../../assets/sidebar/chat-active.svg'
+import chatDefault from '../../assets/sidebar/chat-default.svg'
+import profileActive from '../../assets/sidebar/profile active.svg'
+import profileDefault from '../../assets/sidebar/profile-default.svg'
+import searchActive from '../../assets/sidebar/search-active.svg'
+import searchDefault from '../../assets/sidebar/search-default.svg'
+import logout from '../../assets/sidebar/logout.svg'
 
 const Sidebar = () => {
+  const location = useLocation()
+
+  const isProfileActive = location.pathname === '/settings' || location.pathname === '/vehicle-edit'
+
+  // [JS] 로그아웃 API 연동 예정
   const handleLogout = () => {
-    alert('로그아웃 되었습니다. (추후 API 연동)');
-  };
+    alert('로그아웃 되었습니다. (추후 API 연동)')
+  }
 
   return (
-    <nav className="sidebar-container">
-      
-      <div className="profile-section">
-        <IoPersonCircleOutline className="profile-large-icon" />
-        <div className="profile-info">
-          <div className="profile-name">내 프로필</div>
-          <div className="profile-status">상태메세지</div>
+    <nav className='sidebar'>
+      <div className='sidebar__col'>
+        <div className='sidebar__top'>
+          <NavLink to='/settings'>
+            {() => <img src={isProfileActive ? profileActive : profileDefault} alt='프로필' />}
+          </NavLink>
+
+          <NavLink to='/chat'>
+            {({ isActive }) => <img src={isActive ? chatActive : chatDefault} alt='채팅' />}
+          </NavLink>
+
+          <NavLink to='/'>
+            {({ isActive }) => <img src={isActive ? searchActive : searchDefault} alt='검색' />}
+          </NavLink>
+        </div>
+
+        <div className='sidebar__bottom'>
+          <div className='sidebar__divider' />
+          {/* [JS] 로그아웃 onClick 연결 */}
+          <button onClick={handleLogout}>
+            <img src={logout} alt='로그아웃' />
+          </button>
         </div>
       </div>
-
-      
-      <div className="menu-section">
-        <NavLink to="/chat" className={({ isActive }) => (isActive ? "menu-item active" : "menu-item")}>
-          <IoChatbubbleOutline className="menu-icon" />
-          <span>채팅</span>
-        </NavLink>
-
-        <NavLink to="/" className={({ isActive }) => (isActive ? "menu-item active" : "menu-item")}>
-          <IoSearchOutline className="menu-icon" />
-          <span>검색</span>
-        </NavLink>
-
-    
-        <button className="menu-item logout-menu-btn" onClick={handleLogout}>
-          <IoLockClosedOutline className="menu-icon" />
-          <span>로그아웃</span>
-        </button>
-      </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

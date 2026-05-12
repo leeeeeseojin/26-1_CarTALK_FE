@@ -1,4 +1,5 @@
 import './InputField.css'
+import './InputField.css'
 
 export default function InputField({
   id,
@@ -7,14 +8,17 @@ export default function InputField({
   placeholder,
   autoComplete,
   required,
+  status = 'default',
+  errorMsg,
   value,
-  onChange
+  onChange,
+  onKeyDown,
 }) {
   return (
     <div className='input-field'>
       <input
         id={id}
-        className='input-field__input'
+        className={`input-field__input input-field__input--${status}`}
         type={type}
         name={name}
         placeholder={placeholder}
@@ -22,7 +26,9 @@ export default function InputField({
         required={required}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
       />
+      {status === 'error' && errorMsg && <p className='input-field__error-msg'>{errorMsg}</p>}
     </div>
   )
 }
