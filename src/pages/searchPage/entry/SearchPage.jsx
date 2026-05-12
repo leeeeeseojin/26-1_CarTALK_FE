@@ -4,6 +4,7 @@ import Sidebar from '../../../components/sidebar/Sidebar'
 import ChatListItem from '../components/chatListItem/ChatListItem'
 import SearchNoneModal from '../components/searchNoneModal/SearchNoneModal'
 import AccidentGuide from '../components/accidentGuide/AccidentGuide'
+import logoSrc from '../../../assets/logo/CarTALK.svg'
 import './SearchPage.css'
 
 export default function SearchPage() {
@@ -40,7 +41,7 @@ export default function SearchPage() {
       <main className='search__main'>
         {/* 헤더 — 로고 + 검색바 */}
         <div className='search__header'>
-          <h1 className='search__logo'>CarTALK</h1>
+          <img className='search__logo' src={logoSrc} alt='CarTALK' />
 
           <div className='search__bar'>
             <input
@@ -48,10 +49,9 @@ export default function SearchPage() {
               type='text'
               placeholder='차량 번호를 검색하세요'
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)} // [JS] 입력값 업데이트
+              onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            {/* [JS] 검색 버튼 onClick 연결 */}
             <button className='search__btn' onClick={handleSearch}>
               검색
             </button>
@@ -70,7 +70,7 @@ export default function SearchPage() {
                 plateNumber={chat.plateNumber}
                 lastMessage={chat.lastMessage}
                 isVerified={chat.isVerified}
-                onClick={() => navigate('/chat')} // [JS] 채팅방으로 이동
+                onClick={() => navigate('/chat')}
               />
             ))}
           </div>

@@ -27,15 +27,10 @@
   width: 100%;
 }
 
-/* 로고 — Display 40px ExtraBold, tracking -1.6px */
+/* 로고 이미지 */
 .search__logo {
-  font-size: var(--display-size);
-  font-weight: var(--display-weight);
-  letter-spacing: -1.6px;
-  line-height: var(--display-leading);
-  color: var(--txt-heading);
-  text-align: center;
-  width: 100%;
+  height: 40px;
+  width: auto;
 }
 
 /* 검색바 — 인풋 + 버튼 가로, px 40 py 20 */
@@ -69,6 +64,8 @@
 
 .search__input::placeholder {
   color: var(--txt-placeholder);
+  font-size: 20px;
+  font-weight: 300;
 }
 
 .search__input:focus {
@@ -76,14 +73,14 @@
   background-color: var(--bg-card);
 }
 
-/* 검색 버튼 — h-80, w-150, 28px ExtraBold */
+/* 검색 버튼 — h-80, w-150 */
 .search__btn {
   width: 150px;
   height: 80px;
   background-color: var(--p-main);
   border-radius: var(--r-sm);
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 28px;
   color: var(--txt-on-y);
