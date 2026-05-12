@@ -42,6 +42,15 @@
   box-sizing: border-box;
 }
 
+/* 인풋 묶음 */
+.signup__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  margin-bottom: var(--sp-20);
+}
+
 /* 제목 — ExtraBold 28px */
 .signup__title {
   font-size: var(--title-size);
@@ -51,45 +60,62 @@
   color: var(--txt-high);
 }
 
-/* 부제목 — Medium 15px */
+/* 부제목 */
 .signup__subtitle {
-  font-size: var(--body-sm-size);
-  font-weight: var(--body-sm-weight);
-  line-height: var(--body-sm-leading);
-  color: var(--txt-low);
+  font-size: var(--body-size);
+  font-weight: var(--body-weight);
+  line-height: var(--body-leading);
+  color: var(--txt-mid);
+  margin-bottom: var(--sp-32);
 }
 
-/* 인풋 + 버튼 가로 묶음 */
-.signup__row {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-8);
-  width: 100%;
-}
-
-.signup__row .input-field {
+/* 언더라인 인풋 */
+.signup__input {
   flex: 1;
+  height: 44px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-default);
+  border-radius: 0;
+  outline: none;
+  font-size: var(--body-size);
+  font-weight: var(--body-weight);
+  line-height: var(--body-leading);
+  color: var(--txt-heading);
   min-width: 0;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
 }
 
-.signup__row .btn {
-  flex-shrink: 0;
+.signup__input::placeholder {
+  color: var(--txt-placeholder);
+  font-weight: 200;
+  font-size: var(--body-sm-size);
 }
 
-/* 인풋 + 힌트 세로 묶음 — height 61px */
+.signup__input:focus {
+  border-bottom-color: var(--border-focus);
+}
+
+/* 인풋 + 액션 링크 세로 묶음 */
 .signup__field {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 61px;
+  gap: 6px;
   width: 100%;
 }
 
-/* 힌트 텍스트 — Bold 12px */
-.signup__hint {
-  font-size: var(--tiny-size);
-  font-weight: var(--tiny-weight);
-  letter-spacing: var(--tiny-tracking);
-  line-height: var(--tiny-leading);
-  color: var(--txt-low);
+/* 인증 액션 링크 — 오른쪽 정렬 */
+.signup__action {
+  font-size: var(--body-sm-size);
+  font-weight: var(--body-sm-weight);
+  line-height: var(--body-sm-leading);
+  color: var(--txt-high);
+  text-align: right;
+  cursor: pointer;
+}
+
+.signup__action:hover {
+  color: var(--p-main);
 }

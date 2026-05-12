@@ -29,11 +29,11 @@ export default function ProfileCard({
 
       <div className='profile-card__actions'>
         {/* [JS] onEditProfile 연결 */}
-        <Button variant='outline' onClick={onEditProfile}>
+        <Button variant='outline' width='110px' onClick={onEditProfile}>
           프로필 편집
         </Button>
         {/* [JS] onEditPersonal 연결 */}
-        <Button variant='outline' onClick={onEditPersonal}>
+        <Button variant='outline' width='110px' onClick={onEditPersonal}>
           개인정보 편집
         </Button>
       </div>

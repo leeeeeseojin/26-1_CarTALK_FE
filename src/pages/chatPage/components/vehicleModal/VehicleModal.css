@@ -19,9 +19,29 @@
   border-radius: var(--r-card);
   overflow: hidden;
   box-shadow: 0px 0px 40px 0px rgba(26, 25, 35, 0.2);
+  position: relative;
 }
 
-/* 이미지 영역 — 330x330 */
+/* 닫기 버튼 — absolute 우상단 */
+.vehicle-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--txt-high);
+  cursor: pointer;
+  background: none;
+  border: none;
+  z-index: 1;
+}
+
+.vehicle-modal__close:hover {
+  color: var(--txt-mid);
+}
+
+/* 이미지 영역 — 1:1 비율 */
 .vehicle-modal__image {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -36,13 +56,6 @@
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-/* 인증 뱃지 — 우상단 */
-.vehicle-modal__badge {
-  position: absolute;
-  top: 11px;
-  right: 11px;
 }
 
 /* 본문 */
@@ -60,6 +73,13 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
+}
+
+/* 번호판 + 뱃지 가로 묶음 */
+.vehicle-modal__plate-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .vehicle-modal__plate {
@@ -88,23 +108,25 @@
 .vehicle-modal__info {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 14px;
 }
 
 .vehicle-modal__info-row {
   display: flex;
   align-items: center;
-  gap: var(--sp-8);
+  gap: 20px;
   font-size: var(--body-sm-size);
   font-weight: var(--body-sm-weight);
   line-height: var(--body-sm-leading);
 }
 
+/* 라벨 — txt-low, 52px 고정, nowrap, 오른쪽 정렬 */
 .vehicle-modal__info-label {
   color: var(--txt-low);
   white-space: nowrap;
   flex-shrink: 0;
   width: 52px;
+  text-align: right;
 }
 
 .vehicle-modal__info-value {
@@ -126,31 +148,5 @@
   line-height: var(--body-sm-leading);
   color: var(--txt-mid);
   text-align: center;
-}
-
-/* 닫기 버튼 — 우측 정렬, ghost 스타일 */
-.vehicle-modal__footer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 18px 18px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.vehicle-modal__close-btn {
-  height: 30px;
-  padding: 0 13px;
-  background-color: transparent;
-  border: var(--stroke-default) solid var(--border-default);
-  border-radius: var(--r-default);
-  font-size: var(--body-sm-size);
-  font-weight: var(--body-sm-weight);
-  line-height: var(--body-sm-leading);
-  color: var(--txt-mid);
-  cursor: pointer;
-}
-
-.vehicle-modal__close-btn:hover {
-  border-color: var(--border-focus);
-  color: var(--txt-high);
+  margin-bottom: 4px;
 }

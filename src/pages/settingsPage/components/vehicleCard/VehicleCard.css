@@ -69,29 +69,30 @@
   background-color: var(--border-default);
 }
 
-/* 정보 묶음 — gap 7px */
+/* 정보 묶음 — gap 14px */
 .vehicle-card__info {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 14px;
 }
 
 /* 정보 행 */
 .vehicle-card__info-row {
   display: flex;
   align-items: center;
-  gap: var(--sp-8);
+  gap: 20px;
   font-size: var(--body-sm-size);
   font-weight: var(--body-sm-weight);
   line-height: var(--body-sm-leading);
 }
 
-/* 라벨 — txt-low, 52px 고정, nowrap */
+/* 라벨 — txt-low, 52px 고정, nowrap, 오른쪽 정렬 */
 .vehicle-card__info-label {
   color: var(--txt-low);
   width: 52px;
   flex-shrink: 0;
   white-space: nowrap;
+  text-align: right;
 }
 
 /* 값 — txt-high */
