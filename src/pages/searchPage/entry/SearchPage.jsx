@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import Sidebar from '../../../components/sidebar/Sidebar'
 import ChatListItem from '../components/chatListItem/ChatListItem'
 import SearchNoneModal from '../components/searchNoneModal/SearchNoneModal'
@@ -7,32 +8,78 @@ import AccidentGuide from '../components/accidentGuide/AccidentGuide'
 import logoSrc from '../../../assets/logo/CarTALK.svg'
 import './SearchPage.css'
 
+const api = axios.create({
+  baseURL: 'http://백엔드_서버_주소',
+  withCredentials: true,
+  headers: { 'content-type': 'application/json' }
+})
+
 export default function SearchPage() {
   const [searchValue, setSearchValue] = useState('')
   const [IS_SEARCH_NONE, SET_IS_SEARCH_NONE] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [recentChats, setRecentChats] = useState([])
+  
+  // TODO: 로그인 시 저장된 유저 ID를 가져오는 로직 (임시)
+  const [userId, setUserId] = useState(localStorage.getItem('userId') || '')
 
   const navigate = useNavigate()
 
-  // [JS] 검색 핸들러 — API 연동 예정
-  const handleSearch = () => {
-    // [JS] 검색 결과 없으면 SET_IS_SEARCH_NONE(true)
+  // [API 2] 최근 채팅 목록 불러오기
+  useEffect(() => {
+    const fetchRecentChats = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await api.get('/api/chats/top', {
+          params: { userId: userId }
+        })
+        
+        setRecentChats(response.data.chats || [])
+      } catch (error) {
+        console.error('최근 채팅 목록 로드 실패:', error)
+        setRecentChats([])
+      }
+    }
+
+    fetchRecentChats()
+  }, [userId])
+
+  // [API 1] 차량번호 검색 핸들러
+  const handleSearch = async () => {
+    if (!searchValue.trim() || isLoading) return;
+
+    setIsLoading(true)
+    SET_IS_SEARCH_NONE(false) 
+
+    try {
+      const response = await api.get('/api/cars', {
+        params: { carNum: searchValue }
+      })
+
+      const { carNum, owner } = response.data
+      navigate('/chat', { 
+        state: { 
+          userId: owner.userId, 
+          carNum: carNum, 
+          nickname: owner.nickname 
+        } 
+      })
+
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        SET_IS_SEARCH_NONE(true)
+      } else {
+        console.error('차량 검색 중 에러 발생:', error)
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') handleSearch()
   }
-
-  // [JS] 최근 채팅 목록 — 추후 API 연동
-  const recentChats = [
-    {
-      id: 1,
-      plateNumber: '12가 3456',
-      lastMessage: '네 알겠습니다, 바로 뺄게요!',
-      isVerified: true,
-    },
-    { id: 2, plateNumber: '98가 7654', lastMessage: '차 좀 빼주세요', isVerified: false },
-    { id: 3, plateNumber: '01가 9283', lastMessage: '언제 내려오세요...', isVerified: true },
-  ]
 
   return (
     <div className='search'>
@@ -52,8 +99,12 @@ export default function SearchPage() {
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <button className='search__btn' onClick={handleSearch}>
-              검색
+            <button 
+              className='search__btn' 
+              onClick={handleSearch}
+              disabled={isLoading}
+            >
+              {isLoading ? '...' : '검색'}
             </button>
           </div>
         </div>
@@ -64,15 +115,19 @@ export default function SearchPage() {
         <div className='search__recent'>
           <h2 className='search__recent-title'>최근 채팅 목록</h2>
           <div className='search__list'>
-            {recentChats.map((chat) => (
-              <ChatListItem
-                key={chat.id}
-                plateNumber={chat.plateNumber}
-                lastMessage={chat.lastMessage}
-                isVerified={chat.isVerified}
-                onClick={() => navigate('/chat')}
-              />
-            ))}
+            {recentChats.length > 0 ? (
+              recentChats.map((chat) => (
+                <ChatListItem
+                  key={chat.chatId}
+                  plateNumber={chat.carNum}
+                  lastMessage={chat.lastMessage || '아직 대화가 없어요'}
+                  isVerified={chat.registerCar}
+                  onClick={() => navigate('/chat', { state: { carNum: chat.carNum } })}
+                />
+              ))
+            ) : (
+              <p className="search__no-chats">최근 채팅이 없어요</p>
+            )}
           </div>
         </div>
 
@@ -85,8 +140,9 @@ export default function SearchPage() {
         </div>
       </main>
 
-      {/* 검색 결과 없음 토스트 */}
-      {IS_SEARCH_NONE && <SearchNoneModal />}
+      {IS_SEARCH_NONE && (
+        <SearchNoneModal onClose={() => SET_IS_SEARCH_NONE(false)} />
+      )}
     </div>
   )
 }
