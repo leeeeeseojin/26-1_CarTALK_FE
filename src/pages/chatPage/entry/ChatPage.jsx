@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import Sidebar from '../../../components/sidebar/Sidebar'
 import ChatHeader from '../components/chatHeader/ChatHeader'
 import ChatBubble from '../components/chatBubble/ChatBubble'
@@ -9,40 +11,203 @@ import CallRestrictModal from '../components/callRestrictModal/CallRestrictModal
 import chatNoneIcon from '../../../assets/chat/chat-none.svg'
 import './ChatPage.css'
 
+const api = axios.create({
+  baseURL: 'http://백엔드_서버_주소',
+  withCredentials: true,
+  headers: { 'content-type': 'application/json' }
+})
+
 export default function ChatPage() {
-  // [JS] 모달 상태 관리
+  const { state } = useLocation()
+  const navigate = useNavigate()
+  const myUserId = useRef(localStorage.getItem('userId')).current
+
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false)
   const [isSafeCallModalOpen, setIsSafeCallModalOpen] = useState(false)
   const [IS_CALL_RESTRICT_OPEN, SET_IS_CALL_RESTRICT_OPEN] = useState(false)
   const [inputValue, setInputValue] = useState('')
-
-  // [JS] 완료 버튼 클릭 시 채팅 종료 — chatPage_none으로 전환
   const [isChatActive, setIsChatActive] = useState(true)
 
-  // [JS] 채팅 메시지 목록 — 추후 API 연동
-  const messages = [
-    { id: 1, type: 'other', text: '주차 자리 빼주실 수 있나요?' },
-    { id: 2, type: 'mine', text: '네! 바로 내려갈게요' },
-    { id: 3, type: 'other', text: '언제쯤 오시나요' },
-    { id: 4, type: 'mine', text: '가고 있어요' },
-  ]
+  const [chatId, setChatId] = useState(null)
+  const [messages, setMessages] = useState([])
+  const [nextCursor, setNextCursor] = useState(null)
+  const [hasNext, setHasNext] = useState(false)
+  const [isRoomLoading, setIsRoomLoading] = useState(true)
+  const [isSending, setIsSending] = useState(false)
 
-  // [JS] 전송 핸들러
-  const handleSend = () => {
-    if (!inputValue.trim()) return
-    // [JS] 메시지 전송 API 연동 예정
-    setInputValue('')
+  const [maxCount, setMaxCount] = useState(null)
+  const [remainingCount, setRemainingCount] = useState(null)
+  const [isCallAvailable, setIsCallAvailable] = useState(null)
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = (behavior = 'smooth') => {
+    messagesEndRef.current?.scrollIntoView({ behavior })
   }
 
-  // [JS] 안심전화 핸들러
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom('smooth')
+    }
+  }, [messages])
+
+  useEffect(() => {
+    if (!myUserId) {
+      console.error('로그인 정보가 없습니다.')
+      navigate('/')
+      return
+    }
+    
+    if (!state || !state.userId) {
+      console.error('상대방 유저 정보가 없습니다.')
+      navigate('/')
+    }
+  }, [myUserId, state, navigate])
+
+  // [API 1] 채팅방 생성/조회
+  useEffect(() => {
+    const getOrCreateChatRoom = async () => {
+      if (!myUserId || !state?.userId) return
+      
+      setIsRoomLoading(true)
+      try {
+        const response = await api.post('/api/chats', {
+          userId: myUserId,
+          targetUserId: state.userId
+        })
+        setChatId(response.data.chatId)
+      } catch (error) {
+        console.error('채팅방 생성에 실패했습니다.', error)
+        navigate('/')
+      } finally {
+        setIsRoomLoading(false)
+      }
+    }
+
+    getOrCreateChatRoom()
+  }, [myUserId, state, navigate])
+
+  // [API 2] 메시지 조회
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (!chatId || !myUserId) return
+
+      try {
+        const response = await api.get(`/api/chats/${chatId}/messages`, {
+          params: { userId: myUserId, limit: 30 }
+        })
+
+        const fetchedMessages = response.data.messages || []
+        setMessages([...fetchedMessages].reverse())
+        setNextCursor(response.data.nextCursor)
+        setHasNext(response.data.hasNext)
+        
+        setTimeout(() => scrollToBottom('auto'), 50)
+      } catch (error) {
+        console.error('메시지 조회 실패:', error)
+        setMessages([])
+      }
+    }
+
+    fetchMessages()
+  }, [chatId, myUserId])
+
+  // [API 3] 메시지 전송
+  const handleSend = async () => {
+    if (!inputValue.trim() || isSending || !chatId) return
+
+    const currentText = inputValue
+    setInputValue('') 
+    setIsSending(true)
+
+    const optimisticMessage = {
+      messageId: Date.now(), 
+      senderId: myUserId,
+      nickname: '나',
+      content: currentText,
+      messageType: 'TEXT',
+      createdAt: new Date().toISOString(),
+      mine: true
+    }
+
+    setMessages((prev) => [...prev, optimisticMessage])
+
+    try {
+      await api.post(`/api/chats/${chatId}/messages`, {
+        content: currentText,
+        messageType: 'TEXT'
+      })
+    } catch (error) {
+      console.error('메시지 전송 실패:', error)
+      alert('메시지 전송에 실패했습니다.')
+    } finally {
+      setIsSending(false)
+    }
+  }
+
+  // [API 4] 채팅 완료
+  const handleComplete = async () => {
+    if (!chatId) return
+
+    if (window.confirm('정말 대화를 완료하고 채팅방을 종료하시겠습니까?')) {
+      try {
+        await api.delete(`/api/chats/${chatId}`)
+        setIsChatActive(false)
+      } catch (error) {
+        console.error('채팅 완료 처리 실패:', error)
+      }
+    }
+  }
+
+  // 안심전화 버튼 클릭 핸들러
   const handleSafeCall = () => {
-    // [JS] 잔여 횟수 0이면 callRestrict 토스트, 아니면 safecall 모달
+    if (isCallAvailable === false || (remainingCount !== null && remainingCount === 0)) {
+      SET_IS_CALL_RESTRICT_OPEN(true)
+      return
+    }
     setIsSafeCallModalOpen(true)
   }
 
-  // [JS] 완료 핸들러 — 채팅 종료 후 none 화면으로
-  const handleComplete = () => {
-    setIsChatActive(false)
+  // 안심전화 요청 API 핸들러
+  const handleConfirmSafeCall = async () => {
+    if (!chatId || !myUserId) return
+
+    try {
+      const response = await api.post(`/api/chats/${chatId}/calls`, {
+        userId: myUserId
+      })
+
+      const { call, callAvailable } = response.data
+
+      if (!callAvailable) {
+        setIsSafeCallModalOpen(false)
+        SET_IS_CALL_RESTRICT_OPEN(true)
+        return
+      }
+
+      setMaxCount(call.maxCount)
+      setRemainingCount(call.remainingCount)
+      setIsCallAvailable(callAvailable) 
+      setIsSafeCallModalOpen(false)
+      
+      console.log('안심전화 연결 성공')
+    } catch (error) {
+      console.error('안심전화 발신 실패:', error)
+      setIsSafeCallModalOpen(false)
+      SET_IS_CALL_RESTRICT_OPEN(true)
+    }
+  }
+
+  if (isRoomLoading) {
+    return (
+      <div className='chat'>
+        <Sidebar />
+        <div className='chat__none'>
+          <div className='chat__none-inner'>
+            <p className='chat__none-line'>채팅방을 안전하게 불러오는 중입니다...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!isChatActive) {
@@ -67,56 +232,57 @@ export default function ChatPage() {
       <Sidebar />
 
       <div className='chat__main'>
-        {/* 채팅 헤더 */}
-        {/* [JS] 유저 정보 API 연동 후 props 교체 */}
         <ChatHeader
-          plateNumber='12가 3456'
-          nickname='닉네임은 드라이버'
+          plateNumber={state?.carNum || '차량번호 없음'}
+          nickname={state?.nickname || '닉네임 정보 없음'}
           isVerified={true}
-          safeCallCount='1/3'
-          onAvatarClick={() => setIsVehicleModalOpen(true)} // [JS] 아바타 클릭 → 차량 정보 모달
-          onSafeCall={handleSafeCall} // [JS] 안심전화 클릭
-          onComplete={handleComplete} // [JS] 완료 → none 화면 전환
+          safeCallCount={remainingCount !== null && maxCount !== null ? `${remainingCount}/${maxCount}` : '-/-'}
+          onAvatarClick={() => setIsVehicleModalOpen(true)}
+          onSafeCall={handleSafeCall} 
+          onComplete={handleComplete} 
         />
 
-        {/* 채팅방 */}
         <div className='chat__room'>
           {messages.map((msg) => (
-            <ChatBubble key={msg.id} type={msg.type} text={msg.text} imageUrl={msg.imageUrl} />
+            <ChatBubble 
+              key={msg.messageId} 
+              type={msg.mine ? 'mine' : 'other'} 
+              text={msg.messageType === 'TEXT' ? msg.content : undefined} 
+              imageUrl={msg.messageType === 'IMAGE' ? msg.content : undefined} 
+            />
           ))}
+          <div ref={messagesEndRef} />
         </div>
 
-        {/* 인풋바 */}
         <ChatInputBar
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)} // [JS] 입력값 업데이트
-          onSend={handleSend} // [JS] 전송 연결
-          onPlus={() => {}} // [JS] 파일 첨부 연결
+          onChange={(e) => setInputValue(e.target.value)}
+          onSend={handleSend}
+          onPlus={() => {
+            console.log('TODO: 이미지 전송 기능 구현 필요');
+          }}
         />
       </div>
 
-      {/* 차량 정보 모달 */}
       {isVehicleModalOpen && (
         <VehicleModal
-          plateNumber='12가 3456'
-          nickname='닉네임은드라이버'
+          plateNumber={state?.carNum || '12가 3456'}
+          nickname={state?.nickname || '닉네임은드라이버'}
           type='현대 아반떼 CN7'
           note='원래 범퍼에 스크래치가 있습니다'
           status='주차 중이에요'
           isVerified={true}
-          onClose={() => setIsVehicleModalOpen(false)} // [JS] 닫기 연결
+          onClose={() => setIsVehicleModalOpen(false)}
         />
       )}
 
-      {/* 안심전화 모달 */}
       {isSafeCallModalOpen && (
         <SafeCallModal
-          onConfirm={() => setIsSafeCallModalOpen(false)} // [JS] 통화 시작 API 연결
-          onClose={() => setIsSafeCallModalOpen(false)} // [JS] 닫기 연결
+          onConfirm={handleConfirmSafeCall}
+          onClose={() => setIsSafeCallModalOpen(false)}
         />
       )}
 
-      {/* 통화 제한 토스트 */}
       {IS_CALL_RESTRICT_OPEN && (
         <CallRestrictModal onClose={() => SET_IS_CALL_RESTRICT_OPEN(false)} />
       )}
