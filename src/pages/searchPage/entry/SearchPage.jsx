@@ -20,20 +20,14 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [recentChats, setRecentChats] = useState([])
   
-  // TODO: 로그인 시 저장된 유저 ID를 가져오는 로직 (임시)
-  const [userId, setUserId] = useState(localStorage.getItem('userId') || '')
-
   const navigate = useNavigate()
 
   // [API 2] 최근 채팅 목록 불러오기
   useEffect(() => {
     const fetchRecentChats = async () => {
-      if (!userId) return;
-
       try {
-        const response = await api.get('/api/chats/top', {
-          params: { userId: userId }
-        })
+       
+        const response = await api.get('/api/chats/top')
         
         setRecentChats(response.data.chats || [])
       } catch (error) {
@@ -43,7 +37,7 @@ export default function SearchPage() {
     }
 
     fetchRecentChats()
-  }, [userId])
+  }, [])
 
   // [API 1] 차량번호 검색 핸들러
   const handleSearch = async () => {

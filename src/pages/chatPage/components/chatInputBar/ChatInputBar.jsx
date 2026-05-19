@@ -1,18 +1,42 @@
+import { useRef } from 'react'
 import './ChatInputBar.css'
 
-export default function ChatInputBar({ value, onChange, onSend, onPlus }) {
+export default function ChatInputBar({ value, onChange, onSend, onImageSelect }) {
+  const fileInputRef = useRef(null)
+
   const handleKeyDown = (e) => {
-    // [JS] 엔터키로 전송
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       onSend?.()
     }
   }
 
+ 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      onImageSelect?.(file)
+    }
+   
+    e.target.value = ''
+  }
+
   return (
     <div className='chat-input-bar'>
-      {/* [JS] 파일 첨부 onClick 연결 */}
-      <button className='chat-input-bar__plus' onClick={onPlus}>
+   
+      <input
+        type='file'
+        accept='image/*'
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+
+      <button 
+        className='chat-input-bar__plus' 
+        onClick={() => fileInputRef.current.click()}
+      >
         +
       </button>
 
@@ -25,7 +49,6 @@ export default function ChatInputBar({ value, onChange, onSend, onPlus }) {
         onKeyDown={handleKeyDown}
       />
 
-      {/* [JS] 전송 onClick 연결 */}
       <button className='chat-input-bar__send' onClick={onSend}>
         전송
       </button>
