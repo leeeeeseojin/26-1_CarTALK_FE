@@ -14,9 +14,8 @@ const Sidebar = () => {
 
   const isProfileActive = location.pathname === '/settings' || location.pathname === '/vehicle-edit'
 
-  // [JS] 로그아웃 API 연동 예정
   const handleLogout = () => {
-    alert('로그아웃 되었습니다. (추후 API 연동)')
+    alert('로그아웃 되었습니다.')
   }
 
   return (
@@ -38,7 +37,6 @@ const Sidebar = () => {
 
         <div className='sidebar__bottom'>
           <div className='sidebar__divider' />
-          {/* [JS] 로그아웃 onClick 연결 */}
           <button onClick={handleLogout}>
             <img src={logout} alt='로그아웃' />
           </button>

@@ -20,8 +20,7 @@ const api = axios.create({
 export default function ChatPage() {
   const { state } = useLocation()
   const navigate = useNavigate()
-  const myUserId = useRef(localStorage.getItem('userId')).current
-
+  
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false)
   const [isSafeCallModalOpen, setIsSafeCallModalOpen] = useState(false)
   const [IS_CALL_RESTRICT_OPEN, SET_IS_CALL_RESTRICT_OPEN] = useState(false)
@@ -37,7 +36,9 @@ export default function ChatPage() {
 
   const [maxCount, setMaxCount] = useState(null)
   const [remainingCount, setRemainingCount] = useState(null)
-  const [isCallAvailable, setIsCallAvailable] = useState(null)
+  const [isCallAvailable, setIsCallAvailable] = useState(null) 
+
+  
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = (behavior = 'smooth') => {
@@ -50,29 +51,23 @@ export default function ChatPage() {
     }
   }, [messages])
 
+  
   useEffect(() => {
-    if (!myUserId) {
-      console.error('로그인 정보가 없습니다.')
-      navigate('/')
-      return
-    }
-    
     if (!state || !state.userId) {
       console.error('상대방 유저 정보가 없습니다.')
       navigate('/')
     }
-  }, [myUserId, state, navigate])
+  }, [state, navigate])
 
   // [API 1] 채팅방 생성/조회
   useEffect(() => {
     const getOrCreateChatRoom = async () => {
-      if (!myUserId || !state?.userId) return
+      if (!state?.userId) return
       
       setIsRoomLoading(true)
       try {
         const response = await api.post('/api/chats', {
-          userId: myUserId,
-          targetUserId: state.userId
+          targetUserId: state.userId // userId 제거 완료
         })
         setChatId(response.data.chatId)
       } catch (error) {
@@ -84,16 +79,16 @@ export default function ChatPage() {
     }
 
     getOrCreateChatRoom()
-  }, [myUserId, state, navigate])
+  }, [state, navigate])
 
   // [API 2] 메시지 조회
   useEffect(() => {
     const fetchMessages = async () => {
-      if (!chatId || !myUserId) return
+      if (!chatId) return
 
       try {
         const response = await api.get(`/api/chats/${chatId}/messages`, {
-          params: { userId: myUserId, limit: 30 }
+          params: { limit: 30 } // userId 파라미터 제거 완료
         })
 
         const fetchedMessages = response.data.messages || []
@@ -109,9 +104,9 @@ export default function ChatPage() {
     }
 
     fetchMessages()
-  }, [chatId, myUserId])
+  }, [chatId])
 
-  // [API 3] 메시지 전송
+  // [API 3] 텍스트 메시지 전송
   const handleSend = async () => {
     if (!inputValue.trim() || isSending || !chatId) return
 
@@ -121,7 +116,6 @@ export default function ChatPage() {
 
     const optimisticMessage = {
       messageId: Date.now(), 
-      senderId: myUserId,
       nickname: '나',
       content: currentText,
       messageType: 'TEXT',
@@ -144,7 +138,42 @@ export default function ChatPage() {
     }
   }
 
-  // [API 4] 채팅 완료
+  //[API 4] 이미지 메시지 전송 핸들러
+  const handleImageSend = async (file) => {
+    if (!file || !chatId) return
+
+    const formData = new FormData()
+    formData.append('image', file)
+
+    const previewUrl = URL.createObjectURL(file)
+    const optimisticImage = {
+      messageId: Date.now(),
+      messageType: 'IMAGE',
+      content: previewUrl,
+      mine: true,
+      createdAt: new Date().toISOString()
+    }
+    setMessages((prev) => [...prev, optimisticImage])
+
+    try {
+      const response = await api.post('/api/images/chat', formData, {
+        headers: { 'content-type': 'multipart/form-data' }
+      })
+      const imageUrl = response.data.imageUrl
+      
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.content === previewUrl ? { ...msg, content: imageUrl } : msg
+        )
+      )
+    } catch (error) {
+      console.error('이미지 전송 실패:', error)
+      alert('이미지 전송에 실패했습니다.')
+      setMessages((prev) => prev.filter((msg) => msg.content !== previewUrl))
+    }
+  }
+
+  // [API 5] 채팅 완료
   const handleComplete = async () => {
     if (!chatId) return
 
@@ -169,12 +198,10 @@ export default function ChatPage() {
 
   // 안심전화 요청 API 핸들러
   const handleConfirmSafeCall = async () => {
-    if (!chatId || !myUserId) return
+    if (!chatId) return
 
     try {
-      const response = await api.post(`/api/chats/${chatId}/calls`, {
-        userId: myUserId
-      })
+      const response = await api.post(`/api/chats/${chatId}/calls`)
 
       const { call, callAvailable } = response.data
 
@@ -186,10 +213,9 @@ export default function ChatPage() {
 
       setMaxCount(call.maxCount)
       setRemainingCount(call.remainingCount)
-      setIsCallAvailable(callAvailable) 
+      setIsCallAvailable(callAvailable)
       setIsSafeCallModalOpen(false)
       
-      console.log('안심전화 연결 성공')
     } catch (error) {
       console.error('안심전화 발신 실패:', error)
       setIsSafeCallModalOpen(false)
@@ -258,9 +284,7 @@ export default function ChatPage() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onSend={handleSend}
-          onPlus={() => {
-            console.log('TODO: 이미지 전송 기능 구현 필요');
-          }}
+          onImageSelect={handleImageSend}
         />
       </div>
 
