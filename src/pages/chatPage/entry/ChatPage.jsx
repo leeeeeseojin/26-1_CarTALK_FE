@@ -14,13 +14,13 @@ import './ChatPage.css'
 const api = axios.create({
   baseURL: 'http://백엔드_서버_주소',
   withCredentials: true,
-  headers: { 'content-type': 'application/json' }
+  headers: { 'content-type': 'application/json' },
 })
 
 export default function ChatPage() {
   const { state } = useLocation()
   const navigate = useNavigate()
-  
+
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false)
   const [isSafeCallModalOpen, setIsSafeCallModalOpen] = useState(false)
   const [IS_CALL_RESTRICT_OPEN, SET_IS_CALL_RESTRICT_OPEN] = useState(false)
@@ -29,16 +29,15 @@ export default function ChatPage() {
 
   const [chatId, setChatId] = useState(null)
   const [messages, setMessages] = useState([])
-  const [nextCursor, setNextCursor] = useState(null)
-  const [hasNext, setHasNext] = useState(false)
+  const [NEXT_CURSOR, SET_NEXT_CURSOR] = useState(null)
+  const [HAS_NEXT, SET_HAS_NEXT] = useState(false)
   const [isRoomLoading, setIsRoomLoading] = useState(true)
   const [isSending, setIsSending] = useState(false)
 
   const [maxCount, setMaxCount] = useState(null)
   const [remainingCount, setRemainingCount] = useState(null)
-  const [isCallAvailable, setIsCallAvailable] = useState(null) 
+  const [isCallAvailable, setIsCallAvailable] = useState(null)
 
-  
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = (behavior = 'smooth') => {
@@ -51,7 +50,6 @@ export default function ChatPage() {
     }
   }, [messages])
 
-  
   useEffect(() => {
     if (!state || !state.userId) {
       console.error('상대방 유저 정보가 없습니다.')
@@ -63,11 +61,11 @@ export default function ChatPage() {
   useEffect(() => {
     const getOrCreateChatRoom = async () => {
       if (!state?.userId) return
-      
+
       setIsRoomLoading(true)
       try {
         const response = await api.post('/api/chats', {
-          targetUserId: state.userId // userId 제거 완료
+          targetUserId: state.userId, // userId 제거 완료
         })
         setChatId(response.data.chatId)
       } catch (error) {
@@ -82,28 +80,31 @@ export default function ChatPage() {
   }, [state, navigate])
 
   // [API 2] 메시지 조회
-  useEffect(() => {
-    const fetchMessages = async () => {
-      if (!chatId) return
+  const fetchMessages = async () => {
+    if (!chatId || isSending) return
 
-      try {
-        const response = await api.get(`/api/chats/${chatId}/messages`, {
-          params: { limit: 30 } // userId 파라미터 제거 완료
-        })
+    try {
+      const response = await api.get(`/api/chats/${chatId}/messages`, {
+        params: { limit: 30 }, // userId 파라미터 제거 완료
+      })
 
-        const fetchedMessages = response.data.messages || []
-        setMessages([...fetchedMessages].reverse())
-        setNextCursor(response.data.nextCursor)
-        setHasNext(response.data.hasNext)
-        
-        setTimeout(() => scrollToBottom('auto'), 50)
-      } catch (error) {
-        console.error('메시지 조회 실패:', error)
-        setMessages([])
-      }
+      const fetchedMessages = response.data.messages || []
+      setMessages([...fetchedMessages].reverse())
+      SET_NEXT_CURSOR(response.data.nextCursor)
+      SET_HAS_NEXT(response.data.hasNext)
+
+      setTimeout(() => scrollToBottom('auto'), 50)
+    } catch (error) {
+      console.error('메시지 조회 실패:', error)
+      setMessages([])
     }
+  }
 
+  // 최초 1회 + 2초마다 반복
+  useEffect(() => {
     fetchMessages()
+    const interval = setInterval(fetchMessages, 2000)
+    return () => clearInterval(interval)
   }, [chatId])
 
   // [API 3] 텍스트 메시지 전송
@@ -111,16 +112,16 @@ export default function ChatPage() {
     if (!inputValue.trim() || isSending || !chatId) return
 
     const currentText = inputValue
-    setInputValue('') 
+    setInputValue('')
     setIsSending(true)
 
     const optimisticMessage = {
-      messageId: Date.now(), 
+      messageId: Date.now(),
       nickname: '나',
       content: currentText,
       messageType: 'TEXT',
       createdAt: new Date().toISOString(),
-      mine: true
+      mine: true,
     }
 
     setMessages((prev) => [...prev, optimisticMessage])
@@ -128,7 +129,7 @@ export default function ChatPage() {
     try {
       await api.post(`/api/chats/${chatId}/messages`, {
         content: currentText,
-        messageType: 'TEXT'
+        messageType: 'TEXT',
       })
     } catch (error) {
       console.error('메시지 전송 실패:', error)
@@ -151,20 +152,18 @@ export default function ChatPage() {
       messageType: 'IMAGE',
       content: previewUrl,
       mine: true,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     }
     setMessages((prev) => [...prev, optimisticImage])
 
     try {
       const response = await api.post('/api/images/chat', formData, {
-        headers: { 'content-type': 'multipart/form-data' }
+        headers: { 'content-type': 'multipart/form-data' },
       })
       const imageUrl = response.data.imageUrl
-      
+
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg.content === previewUrl ? { ...msg, content: imageUrl } : msg
-        )
+        prev.map((msg) => (msg.content === previewUrl ? { ...msg, content: imageUrl } : msg)),
       )
     } catch (error) {
       console.error('이미지 전송 실패:', error)
@@ -215,7 +214,6 @@ export default function ChatPage() {
       setRemainingCount(call.remainingCount)
       setIsCallAvailable(callAvailable)
       setIsSafeCallModalOpen(false)
-      
     } catch (error) {
       console.error('안심전화 발신 실패:', error)
       setIsSafeCallModalOpen(false)
@@ -262,19 +260,21 @@ export default function ChatPage() {
           plateNumber={state?.carNum || '차량번호 없음'}
           nickname={state?.nickname || '닉네임 정보 없음'}
           isVerified={true}
-          safeCallCount={remainingCount !== null && maxCount !== null ? `${remainingCount}/${maxCount}` : '-/-'}
+          safeCallCount={
+            remainingCount !== null && maxCount !== null ? `${remainingCount}/${maxCount}` : '-/-'
+          }
           onAvatarClick={() => setIsVehicleModalOpen(true)}
-          onSafeCall={handleSafeCall} 
-          onComplete={handleComplete} 
+          onSafeCall={handleSafeCall}
+          onComplete={handleComplete}
         />
 
         <div className='chat__room'>
           {messages.map((msg) => (
-            <ChatBubble 
-              key={msg.messageId} 
-              type={msg.mine ? 'mine' : 'other'} 
-              text={msg.messageType === 'TEXT' ? msg.content : undefined} 
-              imageUrl={msg.messageType === 'IMAGE' ? msg.content : undefined} 
+            <ChatBubble
+              key={msg.messageId}
+              type={msg.mine ? 'mine' : 'other'}
+              text={msg.messageType === 'TEXT' ? msg.content : undefined}
+              imageUrl={msg.messageType === 'IMAGE' ? msg.content : undefined}
             />
           ))}
           <div ref={messagesEndRef} />
